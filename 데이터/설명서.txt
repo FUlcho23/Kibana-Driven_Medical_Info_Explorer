@@ -1,0 +1,95 @@
+작성자 : 변초은
+logstash-detail.conf (병원/약국 상세정보) logstash-hospital.conf (병원) logstash-drugstore.conf (약국)
+output_csvfile.conf (상세와 병원 통합 파일을 엘라스틱->csv) output_welfare.conf (welfare파일을 엘라스틱->csv)
+timeset.py (의료정보 정제전 -> 의료정보 정제 
+                - 차이 : 해당 파일의 시간 형식이 900 1330 방식이었음
+                 ㄴ> 해당 방식을 9:00 13:30 형식으로 변경) 
+welfare.py (API를 이용해 상태가 폐업이랑 좌표값이 없는걸 제외하고 받아옴 약 18만3천개->약 5만3천개)
+
+- 수정 : 정재은 welfare_updated.py (원래 있던 파일에 컬럼 추가->
+                                                 ㄴ> 시설 기본 주소->주소, 시도코드명, 시군구코드명, 읍면동 추가)
+
+logstash-detail.conf 로 상세 정보부터 생성
+ㄴ>logstash-hospital.conf 로 미리 만들어둔 상세 정보에서 값이 일치하는것만 빼와서 생성
+logstash-drugstore.conf 약국
+
+===인덱스 생성
+PUT merge_hospital
+{
+  "mappings": {
+    "properties": {
+      "진료시작시간_일요일":     { "type": "keyword"},
+      "진료종료시간_일요일":     { "type": "keyword"},
+      "진료시작시간_월요일":     { "type": "keyword"},
+      "진료종료시간_월요일":     { "type": "keyword"},
+      "진료시작시간_화요일":     { "type": "keyword"},
+      "진료종료시간_화요일":     { "type": "keyword"},
+      "진료시작시간_수요일":     { "type": "keyword"},
+      "진료종료시간_수요일":     { "type": "keyword"},
+      "진료시작시간_목요일":     { "type": "keyword"},
+      "진료종료시간_목요일":     { "type": "keyword"},
+      "진료시작시간_금요일":     { "type": "keyword"},
+      "진료종료시간_금요일":     { "type": "keyword"},
+      "진료시작시간_토요일":     { "type": "keyword"},
+      "진료종료시간_토요일":     { "type": "keyword"},
+      "총의사수":               { "type": "integer" },
+      "의과일반의 인원수":       { "type": "integer" },
+      "의과인턴 인원수":       { "type": "integer" },
+      "의과레지던트 인원수":       { "type": "integer" },
+      "의과전문의 인원수":       { "type": "integer" },
+      "치과일반의 인원수":       { "type": "integer" },
+      "치과인턴 인원수":       { "type": "integer" },
+      "치과레지던트 인원수":       { "type": "integer" },
+      "치과전문의 인원수":       { "type": "integer" },
+      "한방일반의 인원수":       { "type": "integer" },
+      "한방인턴 인원수":       { "type": "integer" },
+      "한방레지던트 인원수":       { "type": "integer" },
+      "한방전문의 인원수":       { "type": "integer" },
+      "조산사 인원수":       { "type": "integer" },
+      "응급실_야간_운영여부":     { "type": "keyword" },
+      "응급실_주간_운영여부":     { "type": "keyword" },
+      "location": { "type": "geo_point" }
+    }
+  }
+}
+
+PUT drugstore
+{
+  "mappings": {
+    "properties": {
+      "location": { "type": "geo_point" }
+    }
+  }
+}
+
+=====(수정:정재은)
+PUT /welfare_updated
+{
+  "mappings": {
+    "properties": {
+      "시설명": {
+        "type": "text",
+        "fields": {
+          "raw": { "type": "keyword" }
+        }
+      },
+      "시설유형": { "type": "keyword" },
+      "주소": {
+        "type": "text",
+        "fields": {
+          "raw": { "type": "keyword" }
+        }
+      },
+      "복지로관리시설구분코드": { "type": "keyword" },
+      "시설ID": { "type": "keyword" },
+      "영업상태구분코드": { "type": "keyword" },
+      "위도": { "type": "float" },
+      "경도": { "type": "float" },
+      "시도코드명": { "type": "keyword" },
+      "시군구코드명": { "type": "keyword" },
+      "읍면동": { "type": "keyword" },
+      "location": { "type": "geo_point" }
+    }
+  }
+}
+
