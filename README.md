@@ -1,7 +1,7 @@
 # Kibana-Driven_Medical_Info_Explorer
 ![Picture (1)](https://github.com/user-attachments/assets/f89e0d4c-a8b6-4c46-8a30-bddde12bc143)
 ![Picture (3)](https://github.com/user-attachments/assets/95daa37e-d690-402b-882e-a21e10f3c866)
-![그림](https://github.com/user-attachments/assets/6a32576b-8031-4c16-9522-1cf47c36c8cd)
+![화면 캡처 2025-06-13 143403](https://github.com/user-attachments/assets/1d3095b7-9237-45f4-a906-1448ac837124)
 ![2](https://github.com/user-attachments/assets/bb8bfcce-a345-43f8-9d01-4e2adaf56de8)
 ![3](https://github.com/user-attachments/assets/8cd812cd-6d0e-4943-b8ab-b76f929ad350)
 ![4](https://github.com/user-attachments/assets/92636ca6-2742-499c-916e-3553dae0ce37)
